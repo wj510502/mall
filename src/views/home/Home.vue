@@ -71,7 +71,8 @@ export default {
       currentType: "pop",
       isShowBackTop: false,
       tabOffsetTop: 0,
-      isTapFixed: false
+      isTapFixed: false,
+      saveY :0
     };
   },
   created() {
@@ -84,12 +85,22 @@ export default {
   mounted() {
     //1.图片加载的事件监听
     // 通过bus监听item中图片加载完成
-    const refresh = this.debounce(this.$refs.scroll.scroll.refresh(), 500);
+    //const refresh = this.debounce(this.$refs.scroll.scroll.refresh(), 500);
     this.$bus.$on("itemImageLoad", () => {
       //console.log('----')
-      //this.$refs.scroll.scroll.refresh()
-      refresh();
+      this.$refs.scroll.scroll.refresh()
+      //refresh();
     });
+  },
+  activated() {
+    this.$refs.scroll.scroll.scrollTo(0,this.saveY,0)
+    this.$refs.scroll.scroll.refresh()
+  },
+  deactivated() {
+    //保存Y值
+    this.saveY = this.$refs.scroll.scroll.y
+    //取消全局事件监听
+    //this.$bus.$off
   },
   methods: {
     /**
